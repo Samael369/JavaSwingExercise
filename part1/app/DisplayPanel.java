@@ -15,8 +15,9 @@ public class DisplayPanel extends JPanel {
         setLayout(new BorderLayout());
         setPreferredSize(new Dimension(280, 70));
         setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        textField.setFont(new Font("Arial", Font.PLAIN, 32));
+        textField.setFont(new Font("Arial", Font.PLAIN, 24));
         textField.setHorizontalAlignment(JTextField.LEFT);
+        add(textField, BorderLayout.CENTER);
     }
 
     public String getExpression() {

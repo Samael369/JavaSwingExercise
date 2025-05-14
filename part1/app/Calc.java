@@ -5,7 +5,7 @@ import java.util.Scanner;
 import java.util.Stack;
 
 public class Calc {
-    public ArrayList<Object> operands = new ArrayList<>();
+    public static ArrayList<Object> operands = new ArrayList<>();
     private Stack<Character> operators = new Stack<>();
     private String expression;
 
@@ -20,7 +20,7 @@ public class Calc {
             return 1;
     }
 
-    public double calc() {
+    public String calc() {
         Stack<Double> result = new Stack<>();
         interpretToShuntingYard();
         for (int i = 0; i < operands.size(); i++) {
@@ -52,7 +52,7 @@ public class Calc {
                     break;
             }
         }
-        return result.peek();
+        return result.peek().toString();
     }
 
     public void interpretToShuntingYard() {
