@@ -2,7 +2,10 @@ package part1.app;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
@@ -19,12 +22,27 @@ public class ButtonPanel extends JPanel {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
 
+        ActionListener eventListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                String command = e.getActionCommand();
+                if (command == "C") {
+                    display.setExpression("");
+                } else if (command == "b") {
+                    String temp = display.getExpression();
+                    if (temp.length() > 0) {
+                        temp = temp.substring(0, temp.length() - 2);
+                        display.setExpression(temp);
+                    }
+                }
+            };
+        };
+
         for (int row = 0; row < 5; row++) {
             for (int col = 0; col < 4; col++) {
-                gbc.gridx = row;
-                gbc.gridy = col;
-                add(new JButton(buttons[row][col]), gbc);
+                JButton button = new JButton(buttons[row][col]);
+                button.addActionListener(eventListener);
             }
         }
+        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     }
 }

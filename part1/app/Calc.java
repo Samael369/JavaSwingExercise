@@ -1,5 +1,7 @@
 package part1.app;
+
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.Stack;
 
 public class Calc {
@@ -20,9 +22,8 @@ public class Calc {
 
     public double calc() {
         Stack<Double> result = new Stack<>();
+        interpretToShuntingYard();
         for (int i = 0; i < operands.size(); i++) {
-            System.out.println(operands.get(i));
-            System.out.println(result);
             double second;
             double first;
             switch (operands.get(i).toString()) {
@@ -48,6 +49,7 @@ public class Calc {
                     break;
                 default:
                     result.push(Double.parseDouble(operands.get(i).toString()));
+                    break;
             }
         }
         return result.peek();
@@ -89,19 +91,31 @@ public class Calc {
         ArrayList<Object> temp = new ArrayList<>();
         for (int i = 0; i < expression.length(); i++) {
             char ch = expression.charAt(i);
+
             if ((ch >= '0' && ch <= '9') || ch == '.') {
                 StringBuilder num = new StringBuilder();
-                while ((ch >= '0' && ch <= '9') || ch == '.') {
+                while (i < expression.length() && ((ch >= '0' && ch <= '9') || ch == '.')) {
                     num.append(ch);
-                    if (i == expression.length() - 1)
+                    i++;
+                    if (i < expression.length())
+                        ch = expression.charAt(i);
+                    else
                         break;
-                    ch = expression.charAt(++i);
                 }
                 temp.add(Double.parseDouble(num.toString()));
-            } else if (ch != ' ' || ch == ')') {
+                i--; // step back so outer loop doesn't skip the current char
+            } else if (ch != ' ') {
                 temp.add(ch);
             }
         }
         return temp;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        String in = sc.nextLine();
+        sc.close();
+        Calc calc = new Calc(in);
+        System.out.println("result is : " + calc.calc());
     }
 }

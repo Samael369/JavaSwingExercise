@@ -15,6 +15,6 @@ public class CalculatorApp extends JFrame {
 
         setLayout(new BorderLayout());
         add(display, BorderLayout.NORTH);
-        add(btns, BorderLayout.SOUTH);
+        add(btns, BorderLayout.CENTER);
     }
 }
