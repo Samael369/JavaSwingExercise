@@ -1,7 +1,6 @@
 package part1.app;
 
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Stack;
 
 public class Calc {
@@ -21,6 +20,8 @@ public class Calc {
     }
 
     public String calc() {
+        if (!correctParenthesis())
+            return "Incorrect use of parenthesis";
         Stack<Double> result = new Stack<>();
         interpretToShuntingYard();
         for (int i = 0; i < operands.size(); i++) {
@@ -111,11 +112,19 @@ public class Calc {
         return temp;
     }
 
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        String in = sc.nextLine();
-        sc.close();
-        Calc calc = new Calc(in);
-        System.out.println("result is : " + calc.calc());
+    public boolean correctParenthesis() {
+        ArrayList<Object> temp = castExpression();
+        Stack<Character> parenthesis = new Stack<>();
+        for (Object obj : temp) {
+            if (obj.toString().charAt(0) == '(') {
+                parenthesis.push(obj.toString().charAt(0));
+            } else if (obj.toString().charAt(0) == ')') {
+                if (parenthesis.empty()) {
+                    return false;
+                }
+                parenthesis.pop();
+            }
+        }
+        return parenthesis.empty();
     }
 }
