@@ -3,7 +3,7 @@ package part3.app.components;
 import javax.swing.*;
 import java.awt.*;
 
-public class MainFrame extends JFrame{
+public class MainFrame extends JFrame {
     public MainFrame() {
         SwingUtilities.invokeLater(() -> {
 
