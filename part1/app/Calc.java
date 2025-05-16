@@ -4,26 +4,29 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class Calc {
-    public static ArrayList<Object> operands = new ArrayList<>();
-    private Stack<Character> operators = new Stack<>();
+    public ArrayList<String> operands = new ArrayList<>();// output list to store operands and the final sequence for
+                                                          // computation
+    public Stack<String> operators = new Stack<>();// Stack for storing operands
     private String expression;
 
     public Calc(String expression) {
         this.expression = expression;
     }
 
-    public int checkPrecedence(char ch) {
-        if (ch == '*' || ch == '/') {
+    // checking precedence of operators('*' & '/' higher than '+' & '-')
+    public int checkPrecedence(String str) {
+        if (str.equals("*") || str.equals("/")) {
             return 2;
         } else
             return 1;
     }
 
+    // main method where calculation happens
     public String calc() {
-        if (!correctParenthesis())
+        if (!correctParenthesis())// prints a message to the text field if parenthesis are used wrong
             return "Incorrect use of parenthesis";
         Stack<Double> result = new Stack<>();
-        interpretToShuntingYard();
+        interpretToShuntingYard();// invoked to update operands and operators
         for (int i = 0; i < operands.size(); i++) {
             double second;
             double first;
@@ -53,43 +56,48 @@ public class Calc {
                     break;
             }
         }
-        return result.peek().toString();
+        return result.peek().toString();// returns the final value of expression
     }
 
+    // modifies the expression to the right order of precendece
+    // using shunting-yard algorithm
     public void interpretToShuntingYard() {
-        ArrayList<Object> temp = castExpression();
-        Double doubleType = 0.0;
-        Character chartype = '(';
-        for (Object object : temp) {
-            if (object.getClass() == doubleType.getClass()) {
-                double num = Double.parseDouble(object.toString());
-                operands.add(num);
-            } else if (object.getClass() == chartype.getClass()) {
-                char ch = object.toString().charAt(0);
-                if (ch == '(') {
-                    operators.push(ch);
-                } else if (ch == ')') {
-                    while (operators.peek() != '(') {
-                        operands.add(operators.pop());
-                    }
-                    operators.pop();
-                } else if (!operators.empty() && (operators.peek() != '(' && operators.peek() != ')')
-                        && (checkPrecedence(ch) <= checkPrecedence(operators.peek()))) {
+        ArrayList<String> temp = castExpression();
+        for (String str : temp) {
+            // adds str to operands if it's a number
+            if (str.charAt(0) >= '0' && str.charAt(0) <= '9') {
+                operands.add(str);
+            } else if ("(".equals(str)) {
+                operators.push(str);
+                // pushes operators from stack to list until the peek of the stack is left
+                // parenthesis
+            } else if (")".equals(str)) {
+                while (!"(".equals(operators.peek())) {
                     operands.add(operators.pop());
-                    operators.push(ch);
-                } else {
-                    operators.push(ch);
                 }
+                operators.pop();// discard the left parenthesis from stack
+            }
+            // pushes the operator at the top of the stack into the list and then pushes the
+            // current operator into stack , if only the precedence of the operator at the
+            // peek is higher
+            else if (!operators.empty() && (!operators.peek().equals("(") && !operators.peek().equals(")"))
+                    && (checkPrecedence(str) <= checkPrecedence(operators.peek()))) {
+                operands.add(operators.pop());
+                operators.push(str);
+            } else {
+                operators.push(str);
             }
         }
 
+        // empty the stack into the output list
         while (!operators.empty()) {
             operands.add(operators.pop());
         }
     }
 
-    public ArrayList<Object> castExpression() {
-        ArrayList<Object> temp = new ArrayList<>();
+    // casts the expression into a secquence of strings to be easy-to-read
+    public ArrayList<String> castExpression() {
+        ArrayList<String> temp = new ArrayList<>();
         for (int i = 0; i < expression.length(); i++) {
             char ch = expression.charAt(i);
 
@@ -103,22 +111,23 @@ public class Calc {
                     else
                         break;
                 }
-                temp.add(Double.parseDouble(num.toString()));
-                i--; // step back so outer loop doesn't skip the current char
+                temp.add(num.toString());
+                i--;
             } else if (ch != ' ') {
-                temp.add(ch);
+                temp.add(Character.toString(ch));
             }
         }
         return temp;
     }
 
+    // checks if parenthesis are used right
     public boolean correctParenthesis() {
-        ArrayList<Object> temp = castExpression();
-        Stack<Character> parenthesis = new Stack<>();
-        for (Object obj : temp) {
-            if (obj.toString().charAt(0) == '(') {
-                parenthesis.push(obj.toString().charAt(0));
-            } else if (obj.toString().charAt(0) == ')') {
+        ArrayList<String> temp = castExpression();
+        Stack<String> parenthesis = new Stack<>();
+        for (String str : temp) {
+            if (str.equals("(")) {
+                parenthesis.push(str);
+            } else if (str.equals(")")) {
                 if (parenthesis.empty()) {
                     return false;
                 }
