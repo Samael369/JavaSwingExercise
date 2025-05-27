@@ -9,7 +9,7 @@ public class Calc {
     public Stack<String> operators = new Stack<>();// Stack for storing operands
     private String expression;
 
-    public Calc(String expression) {
+    public void setExpression(String expression) {
         this.expression = expression;
     }
 
